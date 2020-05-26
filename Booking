@@ -1,0 +1,174 @@
+import java.io.*;
+import java.sql.*;
+import org.sqlite.SQLiteConfig;
+import java.util.*;
+public class BookingClass {
+
+   // Sökväg till SQLite-databas. OBS! Ändra sökväg så att den pekar ut din databas
+   public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB";  //ändra till egen sökväg 
+   // Namnet på den driver som används av java för att prata med SQLite
+   public static final String DRIVER = "org.sqlite.JDBC";  
+
+   public static void main(String[] args) throws IOException {
+      Connection conn = null;
+
+      // Kod för att skapa uppkoppling mot SQLite-dabatasen
+   
+   try {
+         Class.forName(DRIVER);
+         SQLiteConfig config = new SQLiteConfig();  
+         config.enforceForeignKeys(true); // Denna kodrad ser till att sätta databasen i ett läge där den ger felmeddelande ifall man bryter mot någon främmande-nyckel-regel
+         conn = DriverManager.getConnection(DB_URL,config.toProperties());  
+      } catch (Exception e) {
+         // Om java-progammet inte lyckas koppla upp sig mot databasen (t ex om fel sökväg eller om driver inte hittas) så kommer ett felmeddelande skrivas ut
+         System.out.println( e.toString() );
+         System.exit(0);
+      }
+      
+      
+      // PLATS FÖR DEKLARATIONER OCH KOD //
+      while (true) { 
+      Scanner input = new Scanner(System.in);
+      long PNr;
+      String FName;
+      String EName;
+      int Age;
+      String Phone;
+      String Mail; 
+      
+      String ClassID; 
+      int ClassSize; 
+      String ClassName;
+      
+      String Date; 
+      String Time; 
+      String LocationID; 
+      String TrainerID;
+      String OpenHours; 
+      
+      String Email;
+      String LocationName;
+      PreparedStatement fråga;
+      ResultSet resultat;
+      
+      System.out.println( "Book a workout session" + "\n" + "C = Class information" + "\n" + "L = Location information" + "\n" + "T = Trainer information" + "\n" + "D = book and confirm workout" + "\n" + "Q = Quit");
+      String in= input.next();
+      try { 
+      switch (in) { //används efter man har skrivet en bokstav för o ge ut
+      // social security number
+     
+  // Kan man skriva in ett case i en annan? alltså att man gör ett case för PNr o sen ett annat case för Classerna då den gemensamma värdena ska placeras in i enrollment
+
+// Sen ska man få ett visst antal Classer baserat på ens medlemskap
+
+
+
+      
+// class information
+case "C":
+case"c": 
+fråga= conn.prepareStatement("Select * from Class order by ClassName;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  ClassID= resultat.getString(1); 
+  ClassSize= resultat.getInt(2); 
+  ClassName= resultat.getString(3); 
+  Date = resultat.getString(4); 
+  Time= resultat.getString(5);
+  LocationID= resultat.getString(6); 
+  TrainerID= resultat.getString(7); 
+
+System.out.print(ClassID + "\t" + ClassSize + "\t" + ClassName + "\t" + Date + "\t" + Time + "\t" + LocationID + "\t" + TrainerID + "\n"); 
+}
+break; 
+
+     
+   // location information 
+case "L":
+case "l": 
+fråga= conn.prepareStatement("Select * from Location order by LocationName");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  LocationID= resultat.getString(1); 
+  LocationName= resultat.getString(2); 
+  OpenHours= resultat.getString(3); 
+  Phone = resultat.getString(4); 
+  Email= resultat.getString(5); 
+
+System.out.print(" " + LocationID + "\t" + LocationName + "\t" + OpenHours + "\t" + Phone + "\t" + Email + "\n"); 
+}
+break; 
+
+
+// trainer information
+case "T":
+case "t":
+fråga= conn.prepareStatement ("Select * from Trainer order by EName");
+resultat = fråga.executeQuery();
+while (resultat.next()) {
+TrainerID = resultat.getString(1);
+FName=resultat.getString(2);
+EName=resultat.getString(3);
+Age=resultat.getInt(4);
+Phone=resultat.getString(5);
+Email=resultat.getString(6);
+
+System.out.println( " " + TrainerID + "\t" + FName + "\t" + EName + "\t" + Age + "\t" + Phone + "\t" + Email + "\n");
+}
+break;
+
+
+//confirm workout
+case "D":
+case "d":
+System.out.println("Write your social security number"); 
+PNr = input.nextLong(); 
+
+System.out.println("here's your choice of locations:" + "\n" + 
+"Partille" + "\n" + "Backa" + "\n" + "Kortedala" + "\n" + "Where do you want to workout?"); 
+LocationName= input.next(); 
+fråga= conn.prepareStatement("Select LocationID from Location where LocationName=" + "'" + LocationName + "'");
+resultat= fråga.executeQuery(); 
+LocationID= resultat.getString(1);
+fråga= conn.prepareStatement("select ClassName from Class where LocationID=" + "'" + LocationID +"'");
+resultat= fråga.executeQuery(); 
+ClassName= resultat.getString(1);
+System.out.println("Here's your choice of classes:" + "\n" + ClassName + "\n" + "Write down your choice of class(Classname)"); 
+ClassName= input.next(); 
+fråga= conn.prepareStatement("select ClassID from Class where ClassName=" + "'" +  ClassName +  "'");
+resultat= fråga.executeQuery();
+ClassID= resultat.getString(1); 
+fråga= conn.prepareStatement("insert into Enrollment_Class(PNr, ClassID) values(" + PNr +  "," + "'" + ClassID + "'" + ")"); 
+fråga.executeUpdate();   
+fråga= conn.prepareStatement("select * from Enrollment_Class where PNr =" + "'" + PNr + "'" + "and ClassID=" + "'" + ClassID + "'" );
+resultat= fråga.executeQuery(); 
+
+ while (resultat.next()){
+  PNr = resultat.getLong(1);
+  ClassID= resultat.getString(2);
+
+System.out.println("Here's your confirmation:" +"\n" + PNr + "\n" + ClassID); 
+}
+break; 
+ 
+
+   case "Q":
+      case "q":
+      System.exit(0);
+      break; 
+      
+     default:
+     System.out.println("felaktig kommando");
+    
+    }
+  }
+  catch (SQLException e) { 
+   System.out.println("Felaktigt");
+   System.out.println(e.getMessage());
+    }
+   }
+  }
+ }
+
+  
+
