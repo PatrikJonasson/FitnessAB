@@ -1,0 +1,90 @@
+CREATE TABLE Member
+(PNr INTEGER(10) NOT NULL,
+FName TEXT,
+EName TEXT,
+Phone TEXT,
+Email TEXT,
+PRIMARY KEY (PNr)
+);
+
+
+CREATE TABLE Enrollment_Membership
+(DateCreated TEXT(10) NOT NULL,
+ PNr INTEGER(10),
+MembershipID TEXT NOT NULL, 
+ExpiryDate TEXT(10) NOT NULL,
+FOREIGN KEY (PNr) REFERENCES Member(PNr),
+FOREIGN KEY (MembershipID) REFERENCES Membership(MembershipID)
+);
+
+
+CREATE TABLE  Membership (
+MembershipID  TEXT NOT NULL, 
+MembershipTier TEXT,
+MembershipRate INTEGER,
+PRIMARY KEY (MembershipID)
+);
+
+
+CREATE TABLE Security_Overview (
+StaffID TEXT NOT NULL,
+MembershipID TEXT NOT NULL,
+FOREIGN KEY (StaffID) REFERENCES Staff (StaffID),
+FOREIGN KEY (MembershipID) REFERENCES Membership (MembershipID)
+);
+
+
+CREATE TABLE Staff (
+StaffID TEXT NOT NULL,   
+FName TEXT,
+EName TEXT,
+Title TEXT,
+Phone TEXT(10),
+Email TEXT,
+PRIMARY KEY (StaffID)
+);
+
+
+CREATE TABLE Enrollment_Class(
+PNr INTEGER(10),
+ClassID  TEXT NOT NULL,
+FOREIGN KEY(PNr) REFERENCES Member(PNr),
+FOREIGN KEY(ClassID) REFERENCES Class(ClassID)
+);
+
+
+CREATE TABLE Class (
+ClassID TEXT NOT NULL,
+ClassSize INTEGER(2),
+ClassName TEXT,
+Date TEXT(10),
+Time TEXT(5),
+LocationID TEXT,
+TrainerID TEXT,
+PRIMARY KEY (ClassID),
+FOREIGN KEY(LocationID) REFERENCES Location(LocationID),
+FOREIGN KEY (TrainerID) REFERENCES Trainer(TrainerID)
+);
+
+
+CREATE TABLE Location (
+LocationID TEXT NOT NULL, 
+LocationName TEXT,
+OpenHours TEXT(5) NOT NULL, 
+Phone  TEXT(10) NOT NULL, 
+Email TEXT NOT NULL,
+PRIMARY KEY (LocationID)
+); 
+
+
+CREATE TABLE Trainer (
+TrainerID TEXT,
+FName TEXT,
+EName TEXT,
+Age INTEGER(2),
+Phone TEXT(10),
+Email TEXT,
+PRIMARY KEY (TrainerID)
+);
+
+
