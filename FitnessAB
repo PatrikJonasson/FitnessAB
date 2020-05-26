@@ -1,0 +1,162 @@
+import java.io.*;
+	import java.sql.*;
+	import java.util.*;
+	import javax.swing.*;
+	import org.sqlite.SQLiteConfig;
+   public class Fitness_AB {
+	   public static final String DB_URL = "jdbc:sqlite:C:\\\\sqlite3\\FitnessAB";
+	   public static final String DRIVER = "org.sqlite.JDBC";  
+	   public static void main(String[] args) throws IOException {
+	      Connection conn = null;
+	   try {
+	         Class.forName(DRIVER);
+	         SQLiteConfig config = new SQLiteConfig();  
+	         config.enforceForeignKeys(true); // Denna kodrad ser till att sätta databasen i ett läge där den ger felmeddelande ifall man bryter mot någon främmande-nyckel-regel
+	         conn = DriverManager.getConnection(DB_URL,config.toProperties());  
+	      } catch (Exception e) {
+	         System.out.println( e.toString() );
+	         System.exit(0);
+	      }
+	      // PLATS FÖR DEKLARATIONER OCH KOD //
+	      while (true) { 
+	      Scanner input = new Scanner(System.in);
+	      long PNr;
+         String PNr1;
+	      String FName;
+	      String EName;
+	      String Phone;
+	      String Email; 
+	      PreparedStatement fråga; 
+	      String MembershipID; 
+         String MembershipTier;
+         String DateCreated; 
+         String ExpiryDate; 
+         int MembershipRate;
+	      String StaffID;
+	      String Title; 
+         ResultSet resultat; 
+
+	// Först ska man skriva in sina personuppg, sen ska man kunna välja vilken typ av membership
+	      System.out.println( "Create a membership" + "\n" +
+	                          "P=Insert Personal Information " + "\n"
+	                          + " Choose your kind of membership" + "\n" + 
+	      "G= Gold - Access to all locations" + "\n" + "S= Silver - Access to two locations" + "\n" + "B= Bronze - Access to one location" + "\n" + "V= view your current information" + "\n" + "Q= Quit");
+	      String in = input.next();                    
+	      try { 
+	      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+	      case "P":
+	      case "p":
+	         // det specifika värdet
+	      System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+	      PNr = input.nextLong(); // den nya personen är
+	      System.out.println( "First Name:");
+	      FName = input.next();
+	      System.out.println("Last Name:");
+	      EName = input.next();
+	      System.out.println("Phonenumber:");
+	      Phone =input.next();
+	      System.out.println("EMail:"); 
+	      Email=input.next();
+	      fråga = conn.prepareStatement("insert into Member (PNr, FName, EName, Phone, Email) values (" + PNr + "," + "'" + FName + "'" + "," + "'"+ EName + "'" + "," + "'" + Phone + "'"  + "," + "'" + Email +"'" +")"); 
+	      fråga.executeUpdate();
+	      break; 
+	    
+	case "G": 
+	
+	System.out.println("Create your MembershipID (M+ your social security number):"); // Skriver in vem den 
+	MembershipID = input.next();
+   PNr1= MembershipID.substring(1);
+	System.out.println("Write current date:"); 
+   DateCreated= input.next(); 
+   System.out.println("When do you want your membership to expire?"); 
+   ExpiryDate= input.next(); 
+   MembershipTier= "Gold";
+	int rate= 300; 
+	fråga = conn.prepareStatement("insert into Membership (MembershipID, MembershipTier, MembershipRate) values (" + "'" + MembershipID + "'" + "," + "'" + MembershipTier + "'" + "," + "'" + rate + "'"+ ")"); 
+	  fråga.executeUpdate();
+   fråga= conn.prepareStatement("insert into Enrollment_Membership (DateCreated, PNr, MembershipID, ExpiryDate) values(" + "'" + DateCreated + "'" + "," + "'" + PNr1 + "'" + "," + "'" + MembershipID + "'" + "," + "'" + ExpiryDate + "'" + ")");
+    fråga.executeUpdate();
+	System.out.println("Welcome to FitnessAB, your Gold Membership will cost 300kr/month");
+	break;
+   
+	// Medlemmen ska välja en av de tre platserna för personen väljer brons som skall vara deras location
+	case "S":
+	case "s":
+	
+	System.out.println("Create your MembershipID (M + your social security number):");
+	MembershipID =input.next();
+	PNr1= MembershipID.substring(1);
+   System.out.println("Write current date:"); 
+   DateCreated= input.next(); 
+   System.out.println("When do you want your membership to expire?"); 
+   ExpiryDate= input.next();  
+   MembershipTier= "Silver";
+   rate = 200;
+	fråga= conn.prepareStatement("insert into Membership (MembershipID, MembershipTier, MembershipRate) values (" + "'" + MembershipID + "'" + "," + "'" + MembershipTier + "'" + "," + "'" + rate + "'" + ")"); 
+	fråga.executeUpdate();
+   fråga= conn.prepareStatement("insert into Enrollment_Membership (DateCreated, PNr, MembershipID, ExpiryDate) values(" + "'" + DateCreated + "'" + "," + "'" + PNr1 + "'" + "," + "'" + MembershipID + "'" + "," + "'" + ExpiryDate + "'" + ")");
+   fråga.executeUpdate();
+	System.out.println("Welcome to FitnessAB, your Silver Membership will cost 200kr/month");
+	break;
+	  
+	case "B":
+	case "b":
+	System.out.println("Create your MembershipID (M + your social security number):");
+	MembershipID=input.next();
+	PNr1= MembershipID.substring(1);
+   System.out.println("Write current date:"); 
+   DateCreated= input.next(); 
+   System.out.println("When do you want your membership to expire?"); 
+   ExpiryDate= input.next(); 
+   MembershipTier= "Bronze";
+	rate = 100;
+	fråga= conn.prepareStatement(" insert into Membership (MembershipID, MembershipTier, MembershipRate) values (" + "'" + MembershipID + "'" + "," + "'" + MembershipTier + "'" + "," + "'" + rate + "'" + ")"); 
+	fråga.executeUpdate();
+   fråga= conn.prepareStatement("insert into Enrollment_Membership (DateCreated, PNr, MembershipID, ExpiryDate) values(" + "'" + DateCreated + "'" + "," + "'" + PNr1 + "'" + "," + "'" + MembershipID + "'" + "," + "'" + ExpiryDate + "'" + ")");
+   fråga.executeUpdate();
+	System.out.println("Welcome to FitnessAB, your Bronze Membership will cost 100kr/month");
+	break;
+   
+   
+   case "V":
+   case "v": 
+   System.out.println("Write your Social Security number:"); 
+   PNr= input.nextLong(); 
+   fråga= conn.prepareStatement("Select FName, EName, Phone, Email from Member where PNr=" + "'" + PNr + "'"); 
+   resultat= fråga.executeQuery(); 
+   while (resultat.next()) {
+   FName= resultat.getString(1); 
+   EName= resultat.getString(2); 
+   Phone= resultat.getString(3); 
+   Email= resultat.getString(4);
+   System.out.println("Here's your information:" + "\n" + FName + ", " + EName + ", " + Phone + ", " + Email); 
+   }
+   
+   System.out.println("Write your membershipID:"); 
+   MembershipID= input.next(); 
+   fråga= conn.prepareStatement("Select MembershipTier, MembershipRate, DateCreated, ExpiryDate from Membership natural join Enrollment_Membership where MembershipID=" + "'" + MembershipID + "'"); 
+	resultat= fråga.executeQuery(); 
+   while (resultat.next()) { 
+   MembershipTier= resultat.getString(1); 
+   MembershipRate= resultat.getInt(2);
+   DateCreated= resultat.getString(3); 
+   ExpiryDate= resultat.getString(4); 
+   System.out.println("Here's your membershipstatus:" + "\n" + MembershipTier + "\n" + MembershipRate +" Kr/month" + "\n" + DateCreated + "\n" + ExpiryDate); 
+   }
+   break; 
+ 
+	      case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+	    }
+	   }
+	  catch (SQLException e) { 
+	   System.out.println("Felaktigt");
+	   System.out.println(e.getMessage());
+	 }	 
+	}
+  }
+ }
