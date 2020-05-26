@@ -1,2 +1,763 @@
 # FitnessAB
 Codes for fitness AB
+
+import java.io.*;
+import java.sql.*;
+import org.sqlite.SQLiteConfig;
+import java.util.*;
+public class Staff {
+
+   // Sökväg till SQLite-databas. OBS! Ändra sökväg så att den pekar ut din databas
+   public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB"; //ändra till sin egna databas  
+   // Namnet på den driver som används av java för att prata med SQLite
+   public static final String DRIVER = "org.sqlite.JDBC";  
+
+   public static void main(String[] args) throws IOException {
+      Connection conn = null;
+
+      // Kod för att skapa uppkoppling mot SQLite-dabatasen
+   
+   try {
+         Class.forName(DRIVER);
+         SQLiteConfig config = new SQLiteConfig();  
+         config.enforceForeignKeys(true); // Denna kodrad ser till att sätta databasen i ett läge där den ger felmeddelande ifall man bryter mot någon främmande-nyckel-regel
+         conn = DriverManager.getConnection(DB_URL,config.toProperties());  
+      } catch (Exception e) {
+         // Om java-progammet inte lyckas koppla upp sig mot databasen (t ex om fel sökväg eller om driver inte hittas) så kommer ett felmeddelande skrivas ut
+         System.out.println( e.toString() );
+         System.exit(0);
+      }
+      
+      
+      // PLATS FÖR DEKLARATIONER OCH KOD //
+      while (true) { 
+      Scanner input = new Scanner(System.in);
+      long PNr;
+      String FName;
+      String EName;
+      String Phone;
+      String Email; 
+      int Age;
+      String MembershipID; 
+      String MembershipTier;
+      long MembershipRate; 
+      PreparedStatement fråga; 
+      ResultSet resultat; 
+      
+      String DateCreated;
+      String ExpiryDate;
+      String StaffID;
+      String Title;
+      String ClassID; 
+      int ClassSize;
+      String ClassName;
+      String Date; 
+      String Time;
+      String OpenHours;
+      String LocationName;
+      String LocationID;
+      String TrainerID;
+
+// Välj vilken tabell du vill se,uppdatera eller radera från (första steget)
+//Kan man ha två bokstäver?
+      
+      System.out.println( "View, Update or Delete Information" + "\n" +
+"M= Member"  + "\n" +
+"EM= Enrollment Membership" + "\n" + 
+"P=Membership" + "\n" + 
+"O=Overview" +"\n" + 
+"S=Staff" + "\n" +
+"EC=Enrollment Class" + "\n" + 
+"C=Class" + "\n" +  
+"L=Location" + "\n" + 
+"T=Trainer" + "\n" + 
+"Q=Quit");
+      
+String in = input.next();                    
+      try { 
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+
+case "M":
+case "m": 
+
+//MEMBER
+      
+// Först ska man skriva in sina , sen ska man kunna välja vilken typ av staff option
+      
+      System.out.println( "Insert personal data" + "\n" + "V= View current information in Member" + 
+      "\n" + "C= create a new member" + "\n" + "U= update current information about a member" + "\n" + "D=Delete information about a member" +
+      "\n" + "Q=Quit");
+      in = input.next();                    
+     
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "V":
+case "v": 
+fråga= conn.prepareStatement("Select * from Member;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  PNr= resultat.getLong(1); 
+  FName= resultat.getString(2); 
+  EName= resultat.getString(3); 
+  Phone = resultat.getString(4); 
+  Email= resultat.getString(5);
+ System.out.print(PNr + "\t" + FName + "\t" + EName + "\t" + Phone + "\t" + Email + "\n");  
+      }
+   break;
+  
+      
+        
+case "C":
+case "c": 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+	      PNr = input.nextLong(); // den nya personen är
+	      System.out.println( "First Name:");
+	      FName = input.next();
+	      System.out.println("Last Name:");
+	      EName = input.next();
+	      System.out.println("Phonenumber:");
+	      Phone =input.next();
+	      System.out.println("EMail:"); 
+	      Email=input.next();
+	      fråga = conn.prepareStatement("insert into Member (PNr, FName, EName, Phone, Email) values (" + "'" + PNr + "'" + "," + "'" + FName + "'" + "," + "'" + EName + "'" + "," + "'" + Phone + "'" + "," + "'" + Email + "'" + ")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+	  
+ case "U": 
+ case "u": 
+ System.out.println("Enter the member's social security number"); 
+ PNr= input.nextLong();
+ System.out.println("Enter the member's first name"); 
+ FName= input.next(); 
+ System.out.println("Enter the member's last name"); 
+ EName= input.next(); 
+ System.out.println("Enter the member's phone-number");
+ Phone= input.next(); 
+ System.out.println("Enter the member's Email-address"); 
+ Email= input.next(); 
+ fråga= conn.prepareStatement("update Member set FName=" + "'" + FName + "'" + ", EName=" + "'" + EName + "'" + ", Phone="+ "'" + Phone + "'" + ", Email=" + "'" + Email + "'" + "where PNr=" + "'" + PNr + "'"); 
+  fråga.executeUpdate();
+  break; 
+  
+	    
+ case "D": 
+ case "d": 
+  
+  System.out.println("Enter the member's social security number to be deleted"); 
+  PNr= input.nextLong(); 
+  fråga= conn.prepareStatement("delete from Member where PNr=" +  "'" + PNr + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+  
+  case "Q":
+  case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;
+  }
+ break;
+        
+ case "EM":
+ case "em":       
+
+//ENROLLMENT MEMBERSHIP
+
+      System.out.println( "Insert personal data" + "\n" + 
+"V= View current information in Enrollment Membership" + "\n" + 
+"C= Create a new Enrollment Membership" + "\n" + 
+"U= Update current information about Enrollment Membership" + "\n" + 
+"D=Delete information about Enrollment Membership" +"\n" + 
+"Q=Quit");
+      in = input.next();                    
+     
+      switch (in) { 
+
+case "V":
+case "v": 
+ fråga= conn.prepareStatement("Select * from Enrollment_Membership;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  DateCreated= resultat.getString(1); 
+  PNr= resultat.getLong(2); 
+  MembershipID= resultat.getString(3); 
+  ExpiryDate= resultat.getString(4); 
+ System.out.print(DateCreated + "\t" + PNr+ "\t" + MembershipID+ "\t" + ExpiryDate + "\n");  
+   }
+   break; 
+  
+
+case "C":
+case "c": 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+	      PNr= input.nextLong(); //nya person
+	      System.out.println("DateCreated:");
+	      DateCreated= input.next();
+	      System.out.println("MembershipID:");
+	      MembershipID= input.next();
+	      System.out.println("ExpiryDate:");
+	      ExpiryDate=input.next();
+	      fråga = conn.prepareStatement("insert into Enrollment_Membership (DateCreated, PNr, MembershipID, ExpiryDate) values (" + "'" +  DateCreated + "'" + "," +  "'" + PNr + "'" + "," + "'" + MembershipID + "'" + "," + "'" + ExpiryDate + "'" + ")"); 
+	      fråga.executeUpdate();
+	      break;
+
+       
+	      
+ case "U": 
+ case "u": 
+ System.out.println("Enter the member's social security number"); 
+ PNr= input.nextLong();
+ System.out.println("Enter date created"); 
+ DateCreated= input.next(); 
+ System.out.println("Enter expiry date"); 
+ ExpiryDate= input.next(); 
+  fråga= conn.prepareStatement("update Enrollment_Membership set DateCreated=" + "'" + DateCreated + "'" + ", ExpiryDate=" + "'" + ExpiryDate + "'" + "where PNr=" + "'" + PNr + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+  
+
+ case "D": 
+ case "d": 
+  
+  System.out.println("Enter the member's social security number to be deleted in Enrollment_Membership "); 
+  PNr= input.nextLong(); 
+  fråga= conn.prepareStatement("delete from Enrollment_Membership where PNr=" + "'" + PNr + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+   
+   case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;
+	      }
+       break; 
+       
+case "P":
+case "p": 
+//MEMBERSHIP
+
+      System.out.println( "Insert personal data" + "\n" + 
+"P= View current information in Membership" + "\n" + 
+"C= Create a new Membership" + "\n" + 
+"U= Update current information in Membership" + "\n" + 
+"D=Delete information from Membership" +"\n" + 
+"Q=Quit");
+  in = input.next();                    
+     
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "P":
+case "p": 
+ fråga= conn.prepareStatement("Select * from Membership;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  MembershipID= resultat.getString(1); 
+  MembershipTier= resultat.getString(2); 
+  MembershipRate= resultat.getLong(3); 
+ System.out.print(MembershipID + "\t" + MembershipTier+ "\t" + MembershipRate + "\n");  
+      }
+   break; 
+	     
+        
+case "C":
+case "c": 
+ System.out.println("MembershipID"); // Skriver in vem den 
+	      MembershipID= input.next(); // den nya personen är
+	      System.out.println( "MembershipTier");
+	      MembershipTier= input.next();
+	      System.out.println("MembershipRate:");
+	      MembershipRate= input.nextLong();
+	      fråga = conn.prepareStatement("insert into Membership (MembershipID,  MembershipTier, MembershipRate) values  (" + "'" + MembershipID + "'" + "," + "'" + MembershipTier + "'" + "," + "'" + MembershipRate + "'" + ")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+	   
+
+ case "U": 
+ case "u": 
+ System.out.println("Enter the member's membershipID number"); 
+ MembershipID= input.next();
+ System.out.println("MembershipTier"); 
+ MembershipTier= input.next(); 
+ System.out.println("Enter the member's last name"); 
+ MembershipRate= input.nextLong(); 
+ fråga= conn.prepareStatement("update Membership set MembershipTier=" + "'" + MembershipTier + "'" + ", MembershipRate=" +  "'" + MembershipRate + "'" + "where MembershipID=" + "'" + MembershipID + "'"); 
+  fråga.executeUpdate();
+  break; 
+  
+	   
+
+case "D": 
+ case "d": 
+  
+  System.out.println("Enter the member's membershipID number to be deleted from Membership "); 
+  MembershipID= input.next(); 
+  fråga= conn.prepareStatement("delete from Membership where MembershipID=" + "'" + MembershipID + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+   
+  case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+         break;
+    
+        }
+       break;
+
+  case"O": 
+  case"o":
+// Security_OVERVIEW
+
+      System.out.println( "Insert personal data" + "\n" + 
+"O= View current information in Overview" + "\n" + 
+"C= Create a new information in Overview" + "\n" + 
+"\n" + "Q=Quit");
+      in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "O":
+case "o": 
+ fråga= conn.prepareStatement("Select * from Security_Overview;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  StaffID= resultat.getString(1); 
+  MembershipID= resultat.getString(2); 
+ System.out.print(StaffID + "\t" + MembershipID + "\n");  
+      }
+   break; 
+	    
+
+
+case "C":
+case "c": 
+ System.out.println("StaffID"); // Skriver in vem den 
+	      StaffID= input.next(); //nya person
+	      System.out.println("MembershipID:");
+	      MembershipID= input.next();
+	      fråga = conn.prepareStatement("insert into Security_Overview (StaffID, MembershipID) values (" + "'" + StaffID + "'" + "," + "'" + MembershipID + "'" + ")"); 
+	      fråga.executeUpdate();
+	      break;
+
+
+   case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+         break;
+        }
+         break;    
+    
+ case "S":
+ case "s":   
+//STAFF
+
+      System.out.println( "Insert personal data" + "\n" + 
+"S= View current information about Staff" + "\n" + 
+"C= Create a new information about Staff" + "\n" +
+"U= Update a staff member" + "\n" + 
+"D=Delete information from Staff" +"\n" + 
+"Q=Quit");
+     in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "S":
+case "s": 
+ fråga= conn.prepareStatement("Select * from Staff;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  StaffID= resultat.getString(1); 
+  FName= resultat.getString(2); 
+  EName= resultat.getString(3); 
+  Title= resultat.getString(4); 
+  Phone = resultat.getString(5); 
+  Email= resultat.getString(6);
+ System.out.print(StaffID + "\t" + FName + "\t" + EName + "\t" +Title +  "\t" + Phone + "\t" + Email + "\n");  
+      }
+   break; 
+	    
+
+case "C":
+case "c": 
+ System.out.println("StaffID:"); // Skriver in vem den 
+	      StaffID= input.next(); // den nya personen är
+	      System.out.println( "First Name:");
+	      FName = input.next();
+	      System.out.println("Last Name:");
+	      EName = input.next();
+	      System.out.println("Title:");
+	      Title=input.next();
+         System.out.println("Phonenumber:");
+	      Phone =input.next();
+	      System.out.println("EMail:"); 
+	      Email=input.next();
+	      fråga = conn.prepareStatement("insert into Staff (StaffID, FName, EName, Title, Phone, Email) values (" + "'" + StaffID + "'" + "," + "'" + FName + "'" + "," + "'" + EName + "'" + "," + "'" + Title + "'" + "," + "'" + Phone + "'" + "," + "'" + Email + "'" +")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+	   
+
+ case "U": 
+ case "u": 
+ System.out.println("Enter StaffID number"); 
+ StaffID= input.next();
+ System.out.println("Enter the staff first name"); 
+ FName= input.next(); 
+ System.out.println("Enter the staff last name"); 
+ EName= input.next(); 
+ System.out.println("Enter the staff title");
+ Title= input.next(); 
+ System.out.println("Enter the staff phone-number");
+ Phone= input.next(); 
+ System.out.println("Enter the staff Email-address"); 
+ Email= input.next(); 
+ fråga= conn.prepareStatement("update Staff set FName=" + "'" + FName + "'"  + ", EName=" + "'" + EName + "'" + ", Title=" + "'" + Title + "'" + ",  Phone=" + "'" + Phone + "'" + ", Email=" + "'" + Email + "'" + "where StaffID=" + "'" + StaffID + "'"); 
+  fråga.executeUpdate();
+  break; 
+  
+
+         
+ case "D": 
+ case "d": 
+  
+  System.out.println("Enter StaffID number to be deleted"); 
+  StaffID= input.next(); 
+  fråga= conn.prepareStatement("delete from Staff where StaffID=" + "'" + StaffID + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+   
+    case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;
+        }
+       break;
+
+case "EC":
+case "ec": 
+
+//ENROLLMENT CLASS
+
+      System.out.println(  "M= View current information about which members runs which classes" + 
+      "\n" + "C= create a new member" + "\n" + "\n" + "Q=Quit");
+      in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "M":
+case "m": 
+ fråga= conn.prepareStatement("Select * from Enrollment_Class;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  PNr= resultat.getLong(1); 
+  ClassID= resultat.getString(2); 
+ System.out.print(PNr + "\t" + ClassID + "\n");   
+      }
+   break; 
+	      
+	
+      
+case "C":
+case "c": 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+	      PNr = input.nextLong(); // den nya personen är
+	      System.out.println( "ClassID:");
+         ClassID= input.next();          
+	      fråga = conn.prepareStatement("insert into Enrollment_Class (PNr, ClassID) values (" + "'" +  PNr + "'" + "," + "'" + ClassID + "'" + ")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+     
+  
+  case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;
+    
+        }
+       break;
+
+
+ case "C":
+ case "c":
+//CLASS
+
+      System.out.println( "Insert personal data" + "\n" + 
+"V= View current information in Class" + "\n" + 
+"C= Create a new information in Class" + "\n" + 
+"U= Update a class" + "\n" +
+"D=Delete information from Class" +"\n" + 
+"Q=Quit");
+    in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+
+case "V":
+case "v": 
+ fråga= conn.prepareStatement("Select * from Class;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  ClassID= resultat.getString(1); 
+  ClassSize= resultat.getInt(2); 
+  ClassName= resultat.getString(3); 
+  Date= resultat.getString(4); 
+  Time= resultat.getString(5);
+  LocationID = resultat.getString(6);
+  TrainerID = resultat.getString(7);
+  System.out.print(ClassID + "\t" + ClassSize+ "\t" + ClassName+ "\t" + Date+ "\t" + Time + "\t" + LocationID + "\t" + TrainerID + "\n");  
+      }
+   break; 
+	     
+
+case "C":
+case "c": 
+ System.out.println("ClassID"); // Skriver in vem den 
+	      ClassID= input.next(); // den nya personen är
+	      System.out.println( "ClassSize:");
+	      ClassSize= input.nextInt();
+	      System.out.println("Class Name:");
+	      ClassName=input.next();
+	      System.out.println("Date:"); 
+	      Date=input.next();
+         System.out.println("Time");
+         Time=input.next();
+         System.out.println("LocationID");
+         LocationID=input.next();
+         System.out.println("TrainerID:");
+         TrainerID=input.next();
+	      fråga = conn.prepareStatement("insert into Class (ClassID, ClassSize, ClassName, Date, Time, LocationID, TrainerID) values (" +  "'" + ClassID + "'" + "," + "'" + ClassSize + "'" + "," + "'" + ClassName + "'" + "," + "'" + Date + "'" + "," + "'" + Time + "'" + "," + "'" + LocationID + "'" + "," + "'" + TrainerID + "'"+ ")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+	     
+
+ case "U": 
+ case "u": 
+ System.out.println("Enter ClassID number"); 
+ ClassID= input.next();
+ System.out.println("Enter class size"); 
+ ClassSize= input.nextInt(); 
+ System.out.println("Enter class name"); 
+ ClassName= input.next(); 
+ System.out.println("Enter date");
+ Date= input.next(); 
+ System.out.println("Enter time");
+ Time= input.next(); 
+ System.out.println("Enter locationID"); 
+ LocationID= input.next(); 
+System.out.println("Enter trainerID");
+TrainerID=input.next();
+ fråga= conn.prepareStatement("update Class set ClassSize=" + "'" + ClassSize + "'" + ", ClassName=" +  "'" + ClassName + "'" + ", Date= " +  "'" + Date + "'" + ", Time=" + "'" + Time + "'" + ", LocationID=" + "'" + LocationID + "'" + ", TrainerID=" + "'" + TrainerID + "'" + "where ClassID=" + "'" + ClassID + "'"); 
+  fråga.executeUpdate();
+  break; 
+
+case "D": 
+ case "d": 
+  
+  System.out.println("Enter ClassID number to be deleted"); 
+  ClassID = input.next(); 
+  fråga= conn.prepareStatement("delete from Class where ClassID=" +  "'" + ClassID + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+   
+ case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;    
+        }
+   break;
+   
+   case "L": 
+   case "l": 
+//LOCATION
+
+System.out.println(  "V= View current information about locations" + 
+      "\n" + "N= create a new location" + "\n" + "U= update current information about a location" + "\n" + "R=Remove information about a Location" +
+      "\n" + "Q=Quit");
+       in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "V":
+case "v": 
+ fråga= conn.prepareStatement("Select * from Location;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  LocationID = resultat.getString(1); 
+  LocationName = resultat.getString(2); 
+  OpenHours = resultat.getString(3); 
+  Phone = resultat.getString(4); 
+  Email = resultat.getString(5);
+ System.out.print(LocationID + "\t" + LocationName + "\t" + OpenHours + "\t" + Phone + "\t" + Email + "\n"); 
+  }
+  break; 
+
+case "N":
+case "n": 
+ System.out.println("LocationID:"); // Skriver in nytt om location 
+	      LocationID = input.next(); 
+	      System.out.println( "LocationName:");
+	      LocationName = input.next();
+	      System.out.println("OpenHours:");
+	      OpenHours = input.next();
+	      System.out.println("Phone");
+	      Phone =input.next();
+	      System.out.println("Email"); 
+	      Email =input.next();
+	      fråga = conn.prepareStatement("insert into Location (LocationID, LocationName, OpenHours, Phone, Email) values (" + "'" + LocationID + "'" + "," + "'" + LocationName + "'" + "," + "'" + OpenHours + "'" + "," + "'" + Phone + "'" + "," + "'" + Email + "'" +")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+
+ case "U": 
+ case "u": 
+ System.out.println("Enter LocationID number"); //Uppdaterar info
+ LocationID = input.next();
+ System.out.println("Enter the Location name"); 
+ LocationName = input.next(); 
+ System.out.println("Enter the opening hours");
+ OpenHours = input.next(); 
+ System.out.println("Enter the Location phone-number");
+ Phone = input.next(); 
+ System.out.println("Enter the Location Email-address"); 
+ Email= input.next(); 
+ fråga= conn.prepareStatement("update Location set  LocationName =" + "'" + LocationName + "'" + ",OpenHours=" + "'" + OpenHours + "'" + ",  Phone=" + "'" + Phone + "'" + ", Email=" + "'" + Email + "'" + "where LocationID =" + "'" + LocationID + "'");
+ fråga.executeUpdate();
+  break; 
+
+         
+case "R": 
+ case "r": 
+  
+  System.out.println("Enter the LocationID to be deleted"); 
+  LocationID = input.next(); 
+  fråga= conn.prepareStatement("delete from Location where LocationID=" + "'" + LocationID + "'" ); 
+  fråga.executeUpdate(); 
+  break; 
+   
+   case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break;
+        }
+        break;
+       
+  case "T": 
+  case "t":      
+//TRAINER
+
+System.out.println(  "T= View current information about Trainers" + 
+      "\n" + "H= create a new Trainer" + "\n" + "Y= update current information about a Trainer" + "\n" + "E=Remove information about a Trainer" + "\n" + "Q=Quit");
+      in = input.next();                    
+      
+      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+
+case "T":
+case "t": 
+ fråga= conn.prepareStatement("Select * from Trainer;");
+resultat= fråga.executeQuery();  
+while (resultat.next()) { 
+  TrainerID = resultat.getString(1); 
+  FName = resultat.getString(2); 
+  EName = resultat.getString(3); 
+  Age = resultat.getInt(4); 
+  Phone = resultat.getString(5); 
+  Email = resultat.getString(6);
+ System.out.print(TrainerID + "\t" + FName + "\t" + EName + "\t" + Age + "\t" + Phone + "\t" + Email + "\n"); 
+ }
+break; 
+
+case "H":
+case "h": 
+ System.out.println("TrainerID:"); // Skriver in nytt om Trainer 
+	      TrainerID = input.next(); 
+	      System.out.println( "First Name:");
+	      FName = input.next();
+	      System.out.println("Last name:");
+	      EName = input.next();
+         System.out.println("Age");
+	      Age =input.nextInt();
+	      System.out.println("Phone");
+	      Phone =input.next();
+	      System.out.println("Email"); 
+	      Email =input.next();
+	      fråga = conn.prepareStatement("insert into Trainer (TrainerID, FName, EName, Age, Phone, Email) values (" + "'" + TrainerID + "'" + "," + "'" + FName + "'" + "," + "'" + EName + "'" + "," + "'" + Age + "'" + "," + "'" + Phone + "'" + "," + "'" + Email + "'" +")"); 
+	      fråga.executeUpdate();
+	      break;
+         
+
+ case "Y": 
+ case "y": 
+ System.out.println("Enter TrainerID number"); //Uppdaterar info
+ TrainerID = input.next();
+ System.out.println("Enter the First name"); 
+ FName = input.next(); 
+ System.out.println("Enter the Last name"); 
+ EName = input.next(); 
+ System.out.println("Enter the Age");
+ Age = input.nextInt(); 
+ System.out.println("Enter the Trainer phone-number");
+ Phone = input.next(); 
+ System.out.println("Enter the Trainer Email-address"); 
+ Email= input.next(); 
+ fråga= conn.prepareStatement("update Trainer set FName = " + "'" + FName + "'" + ", EName =" + "'" + EName + "'"  + ", Age =" + "'" + Age + "'" + ", Phone=" + "'" + Phone + "'" + ", Email=" + "'" + Email + "'" + "where TrainerID =" + "'" + TrainerID + "'"); 
+  fråga.executeUpdate();
+  break; 
+
+         
+case "E": 
+ case "e": 
+  
+  System.out.println("Enter the TrainerID to be deleted"); 
+  TrainerID = input.next(); 
+  fråga= conn.prepareStatement("delete from Trainer where TrainerID=" + "'" + TrainerID + "'"); 
+  fråga.executeUpdate(); 
+  break; 
+   
+   
+   case "Q":
+	      case "q":
+	      System.exit(0);
+	      break; 
+	     default:
+	     System.out.println("Error, ");
+        break; 
+	      
+        }
+        break;
+       }
+	  }
+	 	
+      
+	  catch (SQLException e) { 
+	   System.out.println("Felaktigt");
+	   System.out.println(e.getMessage());
+	 }
+   }
+  }
+ }	  
