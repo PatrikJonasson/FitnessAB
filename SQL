@@ -1,3 +1,4 @@
+
 CREATE TABLE Member
 (PNr INTEGER(10) NOT NULL,
 FName TEXT,
@@ -7,10 +8,6 @@ Email TEXT,
 PRIMARY KEY (PNr)
 );
 
-Insert into Member (PNr, Fname, Ename, Phone, Email) values ('9708089898','Anna','Andersson','0712345678','anna97@gmail.com');
-
-INSERT INTO Member (PNr, FName, EName, Phone, Email)
-VALUES ('9612213434', 'Bao', 'Svensson', '0708648123', 'bao96@gmail.com') ;
 
 
 
@@ -23,26 +20,15 @@ FOREIGN KEY (PNr) REFERENCES Member(PNr),
 FOREIGN KEY (MembershipID) REFERENCES Membership(MembershipID)
 );
 
-INSERT INTO Enrollment_Membership (DateCreated, PNr, Membership, ExpiryDate)
-VALUES ('2020-05-12','9708089898', 'M9708089898', '2021-05-12') ;
-
-INSERT INTO Enrollment_Membership (DateCreated, PNr, Membership, ExpiryDate)
-VALUES ('2019-05-11', '9612213434', 'M9612213434', '2022-05-11') ;
 
 
-
-CREATE TABLE  Membership (
+CREATE TABLE Membership (
 MembershipID  TEXT NOT NULL, 
 MembershipTier TEXT,
 MembershipRate INTEGER,
 PRIMARY KEY (MembershipID)
 );
 
-
-insert into Membership (MembershipID, MembershipTier, MembershipRate) values ('M9708089898', 'Gold', '300');
-
-INSERT INTO Membership (MembershipID, MembershipTier, MembershipRate)
-VALUES ('M9612213434', 'Silver', '200');
 
 
 CREATE TABLE Security_Overview (
@@ -53,11 +39,6 @@ FOREIGN KEY (MembershipID) REFERENCES Membership (MembershipID)
 );
 
 
-INSERT INTO Security_Overview (StaffID, MembershipID)
-VALUES ('S101', 'M9709099898') ;
-
-INSERT INTO Security_Overview (StaffID, MembershipID)
-VALUES ('S102', 'M9612213434') ;
 
 
 CREATE TABLE Staff (
@@ -71,25 +52,7 @@ PRIMARY KEY (StaffID)
 );
 
 
-INSERT INTO Staff (StaffID, FName, EName, Title, Phone, Email)
-VALUES ('S101', 'Robert', 'Lilja', 'Manager', '0746324121', 'galning@wahoo.se') ;
 
-INSERT INTO Staff (StaffID, FName, EName, Title, Phone, Email)
-VALUES ('S102', 'Sara', 'Ek', 'Trainer', '0727478109', 'saraEk@gmail.com') 
-
-
-CREATE TABLE Enrollment_Class(
-PNr INTEGER(10),
-ClassID  TEXT NOT NULL,
-FOREIGN KEY(PNr) REFERENCES Member(PNr),
-FOREIGN KEY(ClassID) REFERENCES Class(ClassID)
-);
-
-
-insert into Enrollment_Class (PNr, ClassID) values ('9708089898', 'C1001');
-
-INSERT INTO Enrollment_Class (PNr, ClassID)
-VALUES ('9612213434', 'C1002') ;
 
 
 CREATE TABLE Class (
@@ -106,10 +69,6 @@ FOREIGN KEY (TrainerID) REFERENCES Trainer(TrainerID)
 );
 
 
-Insert into Class (ClassID, ClassSize, ClassName, Date, Time, LocationID, TrainerID) values ('C1001','10','Zumba','2020-05-19','13:30','L2','T10001');
-
-INSERT INTO Class (ClassID, ClassSize, ClassName, Date, Time, LocationID, TrainerID)
-VALUES ('C1002', '20', 'CrossFit', '2020-05-23', '10:45' ,'L3','T10002');
 
 
 CREATE TABLE Location (
@@ -120,12 +79,6 @@ Phone  TEXT(10) NOT NULL,
 Email TEXT NOT NULL,
 PRIMARY KEY (LocationID)
 ); 
-
-INSERT INTO Location (LocationID, LocationName, OpenHours, Phone, Email)
-VALUES ('L2', 'Backa', '08-22', '031-123456', 'FitnessBacka@gmail.com');
-
-INSERT INTO Location (LocationID, LocationName, OpenHours, Phone, Email)
-VALUES ('L3', 'Partille' ,'08-23', '031-124321', 'FitnessPartille@gmail.com');
 
 
 
@@ -138,13 +91,3 @@ Phone TEXT(10),
 Email TEXT,
 PRIMARY KEY (TrainerID)
 );
-
-
-INSERT INTO Trainer (TrainerID, FName, EName, Age, Phone, Email)
-VALUES ('T10001', 'Olle', 'Karlsson', '27', '0736468259', 'OlleYoga@gmail.com') ;
-
-
-INSERT INTO Trainer (TrainerID, FName, EName, Age, Phone, Email)
-VALUES ('T10002', 'Sara', 'Ek', '23', '0727478109', 'saraEk@gmail.com') ;
-
-
