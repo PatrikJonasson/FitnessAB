@@ -4,15 +4,15 @@ import org.sqlite.SQLiteConfig;
 import java.util.*;
 public class BookingClass {
 
-   // Sökväg till SQLite-databas. OBS! Ändra sökväg så att den pekar ut din databas
+  
    public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB";  
-   // Namnet på den driver som används av java för att prata med SQLite
+   
    public static final String DRIVER = "org.sqlite.JDBC";  
 
    public static void main(String[] args) throws IOException {
       Connection conn = null;
 
-      // Kod för att skapa uppkoppling mot SQLite-dabatasen
+     
    
    try {
          Class.forName(DRIVER);
