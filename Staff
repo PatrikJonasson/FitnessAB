@@ -4,7 +4,7 @@ import org.sqlite.SQLiteConfig;
 import java.util.*;
 public class Staff {
 
-   
+   //Connects java to our sql database with name FitnessAB, code that were used in TIG058
    public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB"; 
    
    public static final String DRIVER = "org.sqlite.JDBC";  
@@ -13,7 +13,7 @@ public class Staff {
       Connection conn = null;
 
      
-   
+   //Code that were used in TIG058
    try {
          Class.forName(DRIVER);
          SQLiteConfig config = new SQLiteConfig();  
