@@ -11,7 +11,7 @@ import java.io.*;
 	   try {
 	         Class.forName(DRIVER);
 	         SQLiteConfig config = new SQLiteConfig();  
-	         config.enforceForeignKeys(true); // Denna kodrad ser till att sätta databasen i ett läge där den ger felmeddelande ifall man bryter mot någon främmande-nyckel-regel
+	         config.enforceForeignKeys(true); 
 	         conn = DriverManager.getConnection(DB_URL,config.toProperties());  
 	      } catch (Exception e) {
 	         System.out.println( e.toString() );
@@ -43,11 +43,11 @@ import java.io.*;
 	      "G= Gold - Access to all locations" + "\n" + "S= Silver - Access to two locations" + "\n" + "B= Bronze - Access to one location" + "\n" + "V= view your current information" + "\n" + "Q= Quit");
 	      String in = input.next();                    
 	      try { 
-	      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+	      switch (in) { 
 	      case "P":
 	      case "p":
 	         // det specifika värdet
-	      System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+	      System.out.println("Social Security Number (YYMMDDXXXX):"); 
 	      PNr = input.nextLong(); // den nya personen är
 	      System.out.println( "First Name:");
 	      FName = input.next();
@@ -63,7 +63,7 @@ import java.io.*;
 	    
 	case "G": 
 	
-	System.out.println("Create your MembershipID (M+ your social security number):"); // Skriver in vem den 
+	System.out.println("Create your MembershipID (M+ your social security number):");  
 	MembershipID = input.next();
    PNr1= MembershipID.substring(1);
 	System.out.println("Write current date:"); 
@@ -79,7 +79,7 @@ import java.io.*;
 	System.out.println("Welcome to FitnessAB, your Gold Membership will cost 300kr/month");
 	break;
    
-	// Medlemmen ska välja en av de tre platserna för personen väljer brons som skall vara deras location
+	
 	case "S":
 	case "s":
 	
