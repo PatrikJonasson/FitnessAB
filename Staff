@@ -4,29 +4,29 @@ import org.sqlite.SQLiteConfig;
 import java.util.*;
 public class Staff {
 
-   // Sökväg till SQLite-databas. OBS! Ändra sökväg så att den pekar ut din databas
-   public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB"; //ändra till sin egna databas  
-   // Namnet på den driver som används av java för att prata med SQLite
+   
+   public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB"; 
+   
    public static final String DRIVER = "org.sqlite.JDBC";  
 
    public static void main(String[] args) throws IOException {
       Connection conn = null;
 
-      // Kod för att skapa uppkoppling mot SQLite-dabatasen
+     
    
    try {
          Class.forName(DRIVER);
          SQLiteConfig config = new SQLiteConfig();  
-         config.enforceForeignKeys(true); // Denna kodrad ser till att sätta databasen i ett läge där den ger felmeddelande ifall man bryter mot någon främmande-nyckel-regel
+         config.enforceForeignKeys(true); 
          conn = DriverManager.getConnection(DB_URL,config.toProperties());  
       } catch (Exception e) {
-         // Om java-progammet inte lyckas koppla upp sig mot databasen (t ex om fel sökväg eller om driver inte hittas) så kommer ett felmeddelande skrivas ut
+        
          System.out.println( e.toString() );
          System.exit(0);
       }
       
       
-      // PLATS FÖR DEKLARATIONER OCH KOD //
+      
       while (true) { 
       Scanner input = new Scanner(System.in);
       long PNr;
@@ -55,8 +55,7 @@ public class Staff {
       String LocationID;
       String TrainerID;
 
-// Välj vilken tabell du vill se,uppdatera eller radera från (första steget)
-//Kan man ha två bokstäver?
+
       
       System.out.println( "View, Update or Delete Information" + "\n" +
 "M= Member"  + "\n" +
@@ -78,17 +77,14 @@ String in = input.next();
 case "M":
 case "m": 
 
-//MEMBER
-      
-// Först ska man skriva in sina , sen ska man kunna välja vilken typ av staff option
+
       
       System.out.println( "Insert personal data" + "\n" + "V= View current information in Member" + 
       "\n" + "C= create a new member" + "\n" + "U= update current information about a member" + "\n" + "D=Delete information about a member" +
       "\n" + "Q=Quit");
       in = input.next();                    
      
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
-
+      switch (in) { 
 case "V":
 case "v": 
 fråga= conn.prepareStatement("Select * from Member;");
@@ -107,7 +103,7 @@ while (resultat.next()) {
         
 case "C":
 case "c": 
- System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); 
 	      PNr = input.nextLong(); // den nya personen är
 	      System.out.println( "First Name:");
 	      FName = input.next();
@@ -161,7 +157,7 @@ case "c":
  case "EM":
  case "em":       
 
-//ENROLLMENT MEMBERSHIP
+
 
       System.out.println( "Insert personal data" + "\n" + 
 "V= View current information in Enrollment Membership" + "\n" + 
@@ -189,7 +185,7 @@ while (resultat.next()) {
 
 case "C":
 case "c": 
- System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); 
 	      PNr= input.nextLong(); //nya person
 	      System.out.println("DateCreated:");
 	      DateCreated= input.next();
@@ -237,7 +233,7 @@ case "c":
        
 case "P":
 case "p": 
-//MEMBERSHIP
+
 
       System.out.println( "Insert personal data" + "\n" + 
 "P= View current information in Membership" + "\n" + 
@@ -247,7 +243,7 @@ case "p":
 "Q=Quit");
   in = input.next();                    
      
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+      switch (in) { 
 
 case "P":
 case "p": 
@@ -264,8 +260,8 @@ while (resultat.next()) {
         
 case "C":
 case "c": 
- System.out.println("MembershipID"); // Skriver in vem den 
-	      MembershipID= input.next(); // den nya personen är
+ System.out.println("MembershipID"); 
+	      MembershipID= input.next(); 
 	      System.out.println( "MembershipTier");
 	      MembershipTier= input.next();
 	      System.out.println("MembershipRate:");
@@ -312,7 +308,7 @@ case "D":
 
   case"O": 
   case"o":
-// Security_OVERVIEW
+
 
       System.out.println( "Insert personal data" + "\n" + 
 "O= View current information in Overview" + "\n" + 
@@ -337,7 +333,7 @@ while (resultat.next()) {
 
 case "C":
 case "c": 
- System.out.println("StaffID"); // Skriver in vem den 
+ System.out.println("StaffID"); 
 	      StaffID= input.next(); //nya person
 	      System.out.println("MembershipID:");
 	      MembershipID= input.next();
@@ -358,7 +354,7 @@ case "c":
     
  case "S":
  case "s":   
-//STAFF
+
 
       System.out.println( "Insert personal data" + "\n" + 
 "S= View current information about Staff" + "\n" + 
@@ -368,7 +364,7 @@ case "c":
 "Q=Quit");
      in = input.next();                    
       
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+      switch (in) { 
 
 case "S":
 case "s": 
@@ -388,8 +384,8 @@ while (resultat.next()) {
 
 case "C":
 case "c": 
- System.out.println("StaffID:"); // Skriver in vem den 
-	      StaffID= input.next(); // den nya personen är
+ System.out.println("StaffID:"); 
+	      StaffID= input.next(); 
 	      System.out.println( "First Name:");
 	      FName = input.next();
 	      System.out.println("Last Name:");
@@ -448,13 +444,13 @@ case "c":
 case "EC":
 case "ec": 
 
-//ENROLLMENT CLASS
+
 
       System.out.println(  "M= View current information about which members runs which classes" + 
       "\n" + "C= create a new member" + "\n" + "\n" + "Q=Quit");
       in = input.next();                    
       
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+      switch (in) { 
 
 case "M":
 case "m": 
@@ -471,7 +467,7 @@ while (resultat.next()) {
       
 case "C":
 case "c": 
- System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
+ System.out.println("Social Security Number (YYMMDDXXXX):"); 
 	      PNr = input.nextLong(); // den nya personen är
 	      System.out.println( "ClassID:");
          ClassID= input.next();          
@@ -505,7 +501,7 @@ case "c":
 "Q=Quit");
     in = input.next();                    
       
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+      switch (in) { 
 
 
 case "V":
@@ -527,8 +523,8 @@ while (resultat.next()) {
 
 case "C":
 case "c": 
- System.out.println("ClassID"); // Skriver in vem den 
-	      ClassID= input.next(); // den nya personen är
+ System.out.println("ClassID"); 
+	      ClassID= input.next(); 
 	      System.out.println( "ClassSize:");
 	      ClassSize= input.nextInt();
 	      System.out.println("Class Name:");
@@ -588,15 +584,15 @@ case "D":
    
    case "L": 
    case "l": 
-//LOCATION
+
 
 System.out.println(  "V= View current information about locations" + 
       "\n" + "N= create a new location" + "\n" + "U= update current information about a location" + "\n" + "R=Remove information about a Location" +
       "\n" + "Q=Quit");
        in = input.next();                    
       
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
-
+      switch (in) { 
+      
 case "V":
 case "v": 
  fråga= conn.prepareStatement("Select * from Location;");
@@ -613,7 +609,7 @@ while (resultat.next()) {
 
 case "N":
 case "n": 
- System.out.println("LocationID:"); // Skriver in nytt om location 
+ System.out.println("LocationID:"); 
 	      LocationID = input.next(); 
 	      System.out.println( "LocationName:");
 	      LocationName = input.next();
@@ -630,7 +626,7 @@ case "n":
 
  case "U": 
  case "u": 
- System.out.println("Enter LocationID number"); //Uppdaterar info
+ System.out.println("Enter LocationID number"); 
  LocationID = input.next();
  System.out.println("Enter the Location name"); 
  LocationName = input.next(); 
@@ -666,13 +662,13 @@ case "R":
        
   case "T": 
   case "t":      
-//TRAINER
+
 
 System.out.println(  "T= View current information about Trainers" + 
       "\n" + "H= create a new Trainer" + "\n" + "Y= update current information about a Trainer" + "\n" + "E=Remove information about a Trainer" + "\n" + "Q=Quit");
       in = input.next();                    
       
-      switch (in) { //används efter man har skrivit en bokstav för o ge ut
+      switch (in) { 
 
 case "T":
 case "t": 
@@ -691,7 +687,7 @@ break;
 
 case "H":
 case "h": 
- System.out.println("TrainerID:"); // Skriver in nytt om Trainer 
+ System.out.println("TrainerID:"); 
 	      TrainerID = input.next(); 
 	      System.out.println( "First Name:");
 	      FName = input.next();
@@ -710,7 +706,7 @@ case "h":
 
  case "Y": 
  case "y": 
- System.out.println("Enter TrainerID number"); //Uppdaterar info
+ System.out.println("Enter TrainerID number"); 
  TrainerID = input.next();
  System.out.println("Enter the First name"); 
  FName = input.next(); 
