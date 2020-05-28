@@ -3,6 +3,7 @@ import java.io.*;
 	import java.util.*;
 	import javax.swing.*;
 	import org.sqlite.SQLiteConfig;
+	
    public class Fitness_AB {
 	   public static final String DB_URL = "jdbc:sqlite:C:\\\\sqlite3\\FitnessAB";
 	   public static final String DRIVER = "org.sqlite.JDBC";  
@@ -17,7 +18,7 @@ import java.io.*;
 	         System.out.println( e.toString() );
 	         System.exit(0);
 	      }
-	      // PLATS FÖR DEKLARATIONER OCH KOD //
+	      
 	      while (true) { 
 	      Scanner input = new Scanner(System.in);
 	      long PNr;
@@ -36,7 +37,7 @@ import java.io.*;
 	      String Title; 
          ResultSet resultat; 
 
-	// Först ska man skriva in sina personuppg, sen ska man kunna välja vilken typ av membership
+	
 	      System.out.println( "Create a membership" + "\n" +
 	                          "P=Insert Personal Information " + "\n"
 	                          + " Choose your kind of membership" + "\n" + 
@@ -46,7 +47,7 @@ import java.io.*;
 	      switch (in) { 
 	      case "P":
 	      case "p":
-	         // det specifika värdet
+	       
 	      System.out.println("Social Security Number (YYMMDDXXXX):"); 
 	      PNr = input.nextLong(); // den nya personen är
 	      System.out.println( "First Name:");
