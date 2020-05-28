@@ -5,10 +5,14 @@ import java.io.*;
 	import org.sqlite.SQLiteConfig;
 	
    public class Fitness_AB {
+   
+   	//Connects java to our sql database with name FitnessAB, code that were used in TIG058
 	   public static final String DB_URL = "jdbc:sqlite:C:\\\\sqlite3\\FitnessAB";
 	   public static final String DRIVER = "org.sqlite.JDBC";  
 	   public static void main(String[] args) throws IOException {
 	      Connection conn = null;
+	      
+	      //code that were used in TIG058
 	   try {
 	         Class.forName(DRIVER);
 	         SQLiteConfig config = new SQLiteConfig();  
