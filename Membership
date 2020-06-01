@@ -3,16 +3,13 @@ import java.io.*;
 	import java.util.*;
 	import javax.swing.*;
 	import org.sqlite.SQLiteConfig;
-	
    public class Fitness_AB {
    
-   	//Connects java to our sql database with name FitnessAB, code that were used in TIG058
-	   public static final String DB_URL = "jdbc:sqlite:C:\\\\sqlite3\\FitnessAB";
+   
+	   public static final String DB_URL = "jdbc:sqlite:C:\\Users\\Robert\\Desktop\\Java files\\FitnessFinal\\FitnessFinalDB";
 	   public static final String DRIVER = "org.sqlite.JDBC";  
 	   public static void main(String[] args) throws IOException {
 	      Connection conn = null;
-	      
-	      //code that were used in TIG058
 	   try {
 	         Class.forName(DRIVER);
 	         SQLiteConfig config = new SQLiteConfig();  
@@ -22,6 +19,8 @@ import java.io.*;
 	         System.out.println( e.toString() );
 	         System.exit(0);
 	      }
+	      
+	      
 	      
 	      while (true) { 
 	      Scanner input = new Scanner(System.in);
@@ -45,14 +44,14 @@ import java.io.*;
 	      System.out.println( "Create a membership" + "\n" +
 	                          "P=Insert Personal Information " + "\n"
 	                          + " Choose your kind of membership" + "\n" + 
-	      "G= Gold - Access to all locations" + "\n" + "S= Silver - Access to two locations" + "\n" + "B= Bronze - Access to one location" + "\n" + "V= view your current information" + "\n" + "Q= Quit");
+	      "G= Gold - Access to a bathhouse + lounge + gym." + "\n" + "S= Silver - Access to the lounge and gym." + "\n" + "B= Bronze - Access to the gym." + "\n" + "V= view your current information" + "\n" + "Q= Quit");
 	      String in = input.next();                    
 	      try { 
 	      switch (in) { 
 	      case "P":
 	      case "p":
-	       
-	      System.out.println("Social Security Number (YYMMDDXXXX):"); 
+	         
+	      System.out.println("Social Security Number (YYMMDDXXXX):"); // Skriver in vem den 
 	      PNr = input.nextLong(); // den nya personen är
 	      System.out.println( "First Name:");
 	      FName = input.next();
@@ -66,7 +65,8 @@ import java.io.*;
 	      fråga.executeUpdate();
 	      break; 
 	    
-	case "G": 
+	case "G":
+   case "g": 
 	
 	System.out.println("Create your MembershipID (M+ your social security number):");  
 	MembershipID = input.next();
