@@ -5,7 +5,7 @@ import java.util.*;
 public class BookingClass {
 
   //Connects java to our sql database with name FitnessAB, code that were used in TIG058
-   public static final String DB_URL = "jdbc:sqlite:C:\\Users\\joaki\\Desktop\\SQLite\\Fitness_1";  //ändra till egen sökväg 
+   public static final String DB_URL = "jdbc:sqlite:C:\\sqlite3\\FitnessAB";   
    
    public static final String DRIVER = "org.sqlite.JDBC";  
 
